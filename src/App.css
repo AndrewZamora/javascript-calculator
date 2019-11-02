@@ -3,6 +3,7 @@
   height: 3em;
   border-radius: 3px;
   margin: 1em 0;
+  width: 100%;
 }
 
 .decimal {
@@ -36,7 +37,7 @@
   grid-gap: 0.5em;
   grid-template-areas:
   ".     .      .      ce"
-  "eight seven  nine   divide"
+  "seven eight  nine   divide"
   "four  five   six    multi"
   "one   two    three  sub"
   "zero  period equals plus";
