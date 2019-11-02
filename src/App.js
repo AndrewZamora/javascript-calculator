@@ -1,24 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+const numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+const numButtons = numbers.map((num, i) => {
+  return (
+    <button id={num} className={`numbers-${i} ${num} pad-btn`} style={{gridArea:num}} key={num}>{i}</button>
+  );
+});
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div id="display" className="display">
+      </div>
+      <div className="pad">
+        {numButtons}
+        <button className="decimal pad-btn" id="decimal" >.</button>
+        <button className="equals pad-btn" id="equals" >=</button>
+        <button className="clear pad-btn" id="clear" >CE</button>
+        <button className="divide operators pad-btn" id="divide">&divide;</button>
+        <button className="multiply operators pad-btn" id="multiply">&times;</button>
+        <button className="subtract operators pad-btn" id="subtract">-</button>
+        <button className="add operators pad-btn" id="add">+</button>
+      </div>
     </div>
   );
 }
