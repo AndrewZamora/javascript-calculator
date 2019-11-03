@@ -27,7 +27,7 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      input: 0,
+      input: [],
       output: 0,
     };
   }
@@ -35,19 +35,26 @@ export class App extends Component {
     this.setState({ input: event.target.value });
   }
   inputNum = num => {
-    this.setState({ output: num });
+    this.setState({
+      input: [...this.state.input, num]
+    });
   }
-  add = () => {
-    this.setState(prevState => ({
-      input: prevState + this.state.input
-    }));
+  inputOperator = operator => {
+    this.setState({
+      input: [...this.state.input, operator]
+    });
   }
   equate = () => {
     this.setState({
       output: this.state.input
     });
   }
-  createNumPad = (func) => {
+  clear = () => {
+    this.setState({
+      input: []
+    });
+  }
+  createNumPad = func => {
     const numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
     return numbers.map((num, i) => {
       return (
@@ -65,23 +72,28 @@ export class App extends Component {
   render() {
     return (
       <div className="App">
-        <input
+        <div
+          id="display"
+          className="display">
+          {this.state.input}
+        </div>
+        {console.log(this.state.input)}
+        {/* <input
           id="display"
           className="display"
           type="text"
           value={this.state.output}
           onChange={() => this.onChange}
-        />
+        /> */}
         <div className="pad">
           {this.createNumPad(this.inputNum)}
-          {"TEST " + calculate([3, "*","-", 3])}
           <button className="decimal pad-btn" id="decimal" >.</button>
           <button className="equals pad-btn" id="equals" onClick={() => this.equate} >=</button>
-          <button className="clear pad-btn" id="clear" >CE</button>
-          <button className="divide operators pad-btn" id="divide">&divide;</button>
-          <button className="multiply operators pad-btn" id="multiply">&times;</button>
-          <button className="subtract operators pad-btn" id="subtract">-</button>
-          <button className="add operators pad-btn" id="add" onClick={() => this.add}>+</button>
+          <button className="clear pad-btn" id="clear" onClick={() => this.clear}>CE</button>
+          <button className="divide operators pad-btn" id="divide" onClick={() => this.inputOperator("/")}>&divide;</button>
+          <button className="multiply operators pad-btn" id="multiply" onClick={() => this.inputOperator("*")}>&times;</button>
+          <button className="subtract operators pad-btn" id="subtract" onClick={() => this.inputOperator("-")}>-</button>
+          <button className="add operators pad-btn" id="add" onClick={() => this.inputOperator("+")}>+</button>
         </div>
       </div>
     )
