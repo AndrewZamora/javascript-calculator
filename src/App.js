@@ -35,9 +35,16 @@ export class App extends Component {
     this.setState({ input: event.target.value });
   }
   inputNum = num => {
-    this.setState({
-      input: [...this.state.input, num]
-    });
+    if(this.state.input[0] === 0 && num === 0) return;
+    if(this.state.input[0] === 0 && num > 0){
+      this.setState({
+        input: [num]
+      });
+      return;
+    }
+      this.setState({
+        input: [...this.state.input, num]
+      });
   }
   inputOperator = operator => {
     this.setState({
