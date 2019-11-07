@@ -51,14 +51,32 @@ export class App extends Component {
       input: [...this.state.input, operator]
     });
   }
+  inputDecimal = decimal => {
+    const numBeforeDec = this.state.input.slice(this.state.input.length-1)
+    const checkForDec = array => {
+      let result = false;
+      array.forEach(item=> {
+        if(item.indexOf('.') > -1) {
+          result = true;
+        }
+      });
+      return result;
+    }
+    if(!this.state.input.includes('.') || !checkForDec(this.state.input)){
+      this.setState({
+        input: [this.state.input.slice(this.state.input.slice(0, this.state.input.length-2)), numBeforeDec + decimal]
+      });
+    }
+  }
   equate = () => {
     this.setState({
-      output: this.state.input
+      output: calculate(this.state.input)
     });
   }
   clear = () => {
     this.setState({
-      input: [0]
+      input: [0],
+      output: 0
     });
   }
   createNumPad = func => {
@@ -82,9 +100,8 @@ export class App extends Component {
         <div
           id="display"
           className="display">
-          {this.state.input}
+          {this.state.output ? this.state.output : this.state.input}
         </div>
-        {console.log(this.state.input)}
         {/* <input
           id="display"
           className="display"
@@ -94,7 +111,7 @@ export class App extends Component {
         /> */}
         <div className="pad">
           {this.createNumPad(this.inputNum)}
-          <button className="decimal pad-btn" id="decimal">.</button>
+          <button className="decimal pad-btn" id="decimal" onClick={() => this.inputDecimal('.')}>.</button>
           <button className="equals pad-btn" id="equals" onClick={() => this.equate()}>=</button>
           <button className="clear pad-btn" id="clear" onClick={() => this.clear()}>CE</button>
           <button className="divide operators pad-btn" id="divide" onClick={() => this.inputOperator("/")}>&divide;</button>
