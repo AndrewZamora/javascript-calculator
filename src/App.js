@@ -23,6 +23,18 @@ const calculate = array => {
   });
   return result;
 }
+const decimalCheck = array => {
+  let result = false;
+  for (let i = 0; i < array.length; i++) {
+    if (typeof array[i] === "string") {
+      if (array[i].indexOf('.') > -1) {
+        result = true;
+        break
+      }
+    }
+  }
+  return result;
+}
 export class App extends Component {
   constructor(props) {
     super(props);
@@ -35,16 +47,16 @@ export class App extends Component {
     this.setState({ input: event.target.value });
   }
   inputNum = num => {
-    if(this.state.input[0] === 0 && num === 0) return;
-    if(this.state.input[0] === 0 && num > 0){
+    if (this.state.input[0] === 0 && num === 0) return;
+    if (this.state.input[0] === 0 && num > 0) {
       this.setState({
         input: [num]
       });
       return;
     }
-      this.setState({
-        input: [...this.state.input, num]
-      });
+    this.setState({
+      input: [...this.state.input, num]
+    });
   }
   inputOperator = operator => {
     this.setState({
@@ -52,25 +64,16 @@ export class App extends Component {
     });
   }
   inputDecimal = decimal => {
-    const numBeforeDec = this.state.input.slice(this.state.input.length-1)
-    const checkForDec = array => {
-      let result = false;
-      array.forEach(item=> {
-        if(item.indexOf('.') > -1) {
-          result = true;
-        }
-      });
-      return result;
-    }
-    if(!this.state.input.includes('.') || !checkForDec(this.state.input)){
+    console.log(this.state.input, decimalCheck(this.state.input));
+    if (!decimalCheck(this.state.input)) {
       this.setState({
-        input: [this.state.input.slice(this.state.input.slice(0, this.state.input.length-2)), numBeforeDec + decimal]
+        input: [...this.state.input.slice(0, this.state.input.length - 1), this.state.input.slice(this.state.input.length - 1) + decimal]
       });
     }
   }
   equate = () => {
     this.setState({
-      output: calculate(this.state.input)
+      input: [calculate(this.state.input)]
     });
   }
   clear = () => {
@@ -100,7 +103,7 @@ export class App extends Component {
         <div
           id="display"
           className="display">
-          {this.state.output ? this.state.output : this.state.input}
+          {this.state.input}
         </div>
         {/* <input
           id="display"
