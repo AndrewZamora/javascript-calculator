@@ -35,6 +35,21 @@ const decimalCheck = array => {
   }
   return result;
 }
+const removeStrFloats = array => {
+  const combineFloats = [];
+  let currentFloat = null;
+  array.forEach(num => {
+    if (decimalCheck(num)) {
+      currentFloat = num;
+    } else if (currentFloat && typeof num !== 'string') {
+      combineFloats.push((currentFloat + num) * 1);
+      currentFloat = null;
+    } else {
+      combineFloats.push(num);
+    }
+  })
+  return combineFloats;
+}
 export class App extends Component {
   constructor(props) {
     super(props);
@@ -64,7 +79,7 @@ export class App extends Component {
     });
   }
   inputDecimal = decimal => {
-    console.log(this.state.input, decimalCheck(this.state.input));
+    // console.log(this.state.input, decimalCheck(this.state.input));
     if (!decimalCheck(this.state.input)) {
       this.setState({
         input: [...this.state.input.slice(0, this.state.input.length - 1), this.state.input.slice(this.state.input.length - 1) + decimal]
@@ -72,8 +87,9 @@ export class App extends Component {
     }
   }
   equate = () => {
+    const solution = calculate(removeStrFloats(this.state.input));
     this.setState({
-      input: [calculate(this.state.input)]
+      input: [solution]
     });
   }
   clear = () => {
@@ -100,6 +116,7 @@ export class App extends Component {
   render() {
     return (
       <div className="App">
+        {this.state.input}
         <div
           id="display"
           className="display">
