@@ -23,6 +23,10 @@ const calculate = array => {
   });
   return result;
 }
+const operatorCheck = check => {
+  const operators = ["+", "-", "*", "/"];
+  return operators.includes(check);
+}
 const decimalCheck = array => {
   let result = false;
   for (let i = 0; i < array.length; i++) {
@@ -35,42 +39,32 @@ const decimalCheck = array => {
   }
   return result;
 }
-const removeStrFloats = array => {
-  const combineFloats = [];
-  let currentFloat = null;
-  array.forEach(num => {
-    if (decimalCheck(num)) {
-      currentFloat = num;
-    } else if (currentFloat && typeof num !== 'string') {
-      combineFloats.push((currentFloat + num) * 1);
-      currentFloat = null;
-    } else {
-      combineFloats.push(num);
-    }
-  })
-  return combineFloats;
-}
 export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       input: [0],
-      output: 0,
     };
   }
-  onChange = event => {
-    this.setState({ input: event.target.value });
-  }
   inputNum = num => {
-    if (this.state.input[0] === 0 && num === 0) return;
-    if (this.state.input[0] === 0 && num > 0) {
-      this.setState({
-        input: [num]
-      });
-      return;
+    console.log(this.state.input)
+    const lastItem = this.state.input.slice(this.state.input.length - 1);
+    const beforeLastItem = this.state.input.slice(0, this.state.input.length - 1);
+    const interger = (num * 1);
+    let newInput = null;
+    if (this.state.input[0] === 0 && interger === 0) return;
+    if (this.state.input[0] === 0 && interger > 0) {
+      newInput = [num];
+    } else {
+      if (!operatorCheck(lastItem[0]) || decimalCheck(lastItem[0])) {
+        newInput = [...beforeLastItem, [lastItem + num].join('')]
+      }
+      if (operatorCheck(lastItem[0])) {
+        newInput = [...this.state.input, num]
+      }
     }
     this.setState({
-      input: [...this.state.input, num]
+      input: newInput
     });
   }
   inputOperator = operator => {
@@ -79,15 +73,20 @@ export class App extends Component {
     });
   }
   inputDecimal = decimal => {
-    // console.log(this.state.input, decimalCheck(this.state.input));
-    if (!decimalCheck(this.state.input)) {
+    console.log(this.state.input)
+    const lastItem = this.state.input.slice(this.state.input.length - 1);
+    const beforeLastItem = this.state.input.slice(0, this.state.input.length - 1);
+    if (!decimalCheck(lastItem) && (lastItem * 1) % 1 === 0) {
       this.setState({
-        input: [...this.state.input.slice(0, this.state.input.length - 1), this.state.input.slice(this.state.input.length - 1) + decimal]
+        input: [...beforeLastItem, lastItem + decimal]
       });
-    }
+    };
   }
   equate = () => {
-    const solution = calculate(removeStrFloats(this.state.input));
+    const formattedInput = this.state.input.map(str => {
+      return operatorCheck(str) ? str : (str * 1);
+    });
+    const solution = `${calculate(formattedInput)}`;
     this.setState({
       input: [solution]
     });
@@ -107,7 +106,7 @@ export class App extends Component {
           className={`numbers-${i} ${num} pad-btn`}
           style={{ gridArea: num }}
           key={num}
-          onClick={() => func(i)}>
+          onClick={() => func(`${i}`)}>
           {i}
         </button>
       );
@@ -116,19 +115,11 @@ export class App extends Component {
   render() {
     return (
       <div className="App">
-        {this.state.input}
         <div
           id="display"
           className="display">
           {this.state.input}
         </div>
-        {/* <input
-          id="display"
-          className="display"
-          type="text"
-          value={this.state.output}
-          onChange={() => this.onChange}
-        /> */}
         <div className="pad">
           {this.createNumPad(this.inputNum)}
           <button className="decimal pad-btn" id="decimal" onClick={() => this.inputDecimal('.')}>.</button>
