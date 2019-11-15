@@ -43,24 +43,25 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      input: [0],
+      input: [0]
     };
   }
   inputNum = num => {
     console.log(this.state.input)
-    const lastItem = this.state.input.slice(this.state.input.length - 1);
+    const lastItem = this.state.input.slice(this.state.input.length - 1)[0];
     const beforeLastItem = this.state.input.slice(0, this.state.input.length - 1);
-    const interger = (num * 1);
+    const secondToLastItem = this.state.input.slice(this.state.input.length - 2)[0];
+    const integer = (num * 1);
     let newInput = null;
-    if (this.state.input[0] === 0 && interger === 0) return;
-    if (this.state.input[0] === 0 && interger > 0) {
+    if (this.state.input[0] === 0 && integer === 0) return;
+    if (this.state.input[0] === 0 && integer > 0) {
       newInput = [num];
     } else {
-      if (!operatorCheck(lastItem[0]) || decimalCheck(lastItem[0])) {
-        newInput = [...beforeLastItem, [lastItem + num].join('')]
-      }
-      if (operatorCheck(lastItem[0])) {
+      if (operatorCheck(lastItem)) {
         newInput = [...this.state.input, num]
+      }
+      if (!operatorCheck(lastItem) || decimalCheck([lastItem]) || (operatorCheck(secondToLastItem) && lastItem=== '-')) {
+        newInput = [...beforeLastItem, [lastItem + num].join('')]
       }
     }
     this.setState({
@@ -68,9 +69,12 @@ export class App extends Component {
     });
   }
   inputOperator = operator => {
-    this.setState({
-      input: [...this.state.input, operator]
-    });
+    const lastItem = this.state.input.slice(this.state.input.length - 1)[0];
+    if (operator === "-" || operator !== lastItem) {
+      this.setState({
+        input: [...this.state.input, operator]
+      });
+    }
   }
   inputDecimal = decimal => {
     console.log(this.state.input)
@@ -93,8 +97,7 @@ export class App extends Component {
   }
   clear = () => {
     this.setState({
-      input: [0],
-      output: 0
+      input: [0]
     });
   }
   createNumPad = func => {

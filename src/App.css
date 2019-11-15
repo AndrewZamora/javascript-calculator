@@ -32,15 +32,8 @@
 
 
 .pad {
-  display: grid;
-  grid-template-columns:repeat(4, 1fr);
-  grid-gap: 0.5em;
-  grid-template-areas:
-  ".     .      .      ce"
-  "seven eight  nine   divide"
-  "four  five   six    multi"
-  "one   two    three  sub"
-  "zero  period equals plus";
+  display: block;
+  
 }
 
 .pad-btn {
@@ -49,7 +42,30 @@
   border-radius: 3px;
   cursor: pointer;
   color: #333333;
+  display: inline-block;
+  vertical-align: top;
+  width: 22%;
 }
+.pad-btn:first-of-type{
+  width: 100%;
+}
+@supports(display: grid) {
+  .pad {
+    display: grid;
+    grid-template-columns:repeat(4, 1fr);
+    grid-gap: 0.5em;
+    grid-template-areas:
+    ".     .      .      ce"
+    "seven eight  nine   divide"
+    "four  five   six    multi"
+    "one   two    three  sub"
+    "zero  period equals plus";
+  }
+  .pad-btn, .pad-btn:first-of-type {
+    width: auto;
+  }
+}
+
 
 .numbers {
   background: #f1f3f4;
