@@ -22,11 +22,11 @@ const calculate = array => {
     }
   });
   return result;
-}
+};
 const operatorCheck = check => {
   const operators = ["+", "-", "*", "/"];
   return operators.includes(check);
-}
+};
 const decimalCheck = array => {
   let result = false;
   for (let i = 0; i < array.length; i++) {
@@ -38,14 +38,30 @@ const decimalCheck = array => {
     }
   }
   return result;
-}
+};
+const NumPad = props => {
+  const { func } = props;
+  const numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+  return numbers.map((num, i) => {
+    return (
+      <button
+        id={num}
+        className={`numbers-${i} ${num} pad-btn`}
+        style={{ gridArea: num }}
+        key={num}
+        onClick={() => func(`${i}`)}>
+        {i}
+      </button>
+    );
+  });
+};
 export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       input: [0]
     };
-  }
+  };
   inputNum = num => {
     console.log(this.state.input)
     const lastItem = this.state.input.slice(this.state.input.length - 1)[0];
@@ -60,14 +76,14 @@ export class App extends Component {
       if (operatorCheck(lastItem)) {
         newInput = [...this.state.input, num]
       }
-      if (!operatorCheck(lastItem) || decimalCheck([lastItem]) || (operatorCheck(secondToLastItem) && lastItem=== '-')) {
+      if (!operatorCheck(lastItem) || decimalCheck([lastItem]) || (operatorCheck(secondToLastItem) && lastItem === '-')) {
         newInput = [...beforeLastItem, [lastItem + num].join('')]
       }
     }
     this.setState({
       input: newInput
     });
-  }
+  };
   inputOperator = operator => {
     const lastItem = this.state.input.slice(this.state.input.length - 1)[0];
     if (operator === "-" || operator !== lastItem) {
@@ -75,9 +91,8 @@ export class App extends Component {
         input: [...this.state.input, operator]
       });
     }
-  }
+  };
   inputDecimal = decimal => {
-    console.log(this.state.input)
     const lastItem = this.state.input.slice(this.state.input.length - 1);
     const beforeLastItem = this.state.input.slice(0, this.state.input.length - 1);
     if (!decimalCheck(lastItem) && (lastItem * 1) % 1 === 0) {
@@ -85,7 +100,7 @@ export class App extends Component {
         input: [...beforeLastItem, lastItem + decimal]
       });
     };
-  }
+  };
   equate = () => {
     const formattedInput = this.state.input.map(str => {
       return operatorCheck(str) ? str : (str * 1);
@@ -94,27 +109,12 @@ export class App extends Component {
     this.setState({
       input: [solution]
     });
-  }
+  };
   clear = () => {
     this.setState({
       input: [0]
     });
-  }
-  createNumPad = func => {
-    const numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-    return numbers.map((num, i) => {
-      return (
-        <button
-          id={num}
-          className={`numbers-${i} ${num} pad-btn`}
-          style={{ gridArea: num }}
-          key={num}
-          onClick={() => func(`${i}`)}>
-          {i}
-        </button>
-      );
-    })
-  }
+  };
   render() {
     return (
       <div className="App">
@@ -124,7 +124,7 @@ export class App extends Component {
           {this.state.input}
         </div>
         <div className="pad">
-          {this.createNumPad(this.inputNum)}
+          <NumPad func={this.inputNum} />
           <button className="decimal pad-btn" id="decimal" onClick={() => this.inputDecimal('.')}>.</button>
           <button className="equals pad-btn" id="equals" onClick={() => this.equate()}>=</button>
           <button className="clear pad-btn" id="clear" onClick={() => this.clear()}>CE</button>
@@ -136,6 +136,6 @@ export class App extends Component {
       </div>
     )
   }
-}
+};
 
-export default App
+export default App;
