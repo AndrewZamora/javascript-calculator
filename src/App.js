@@ -59,18 +59,17 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      input: [0]
+      input: ['0']
     };
   };
   inputNum = num => {
-    console.log(this.state.input)
     const lastItem = this.state.input.slice(this.state.input.length - 1)[0];
     const beforeLastItem = this.state.input.slice(0, this.state.input.length - 1);
     const secondToLastItem = this.state.input.slice(this.state.input.length - 2)[0];
     const integer = (num * 1);
     let newInput = null;
-    if (this.state.input[0] === 0 && integer === 0) return;
-    if (this.state.input[0] === 0 && integer > 0) {
+    if (this.state.input[0] === '0' && integer === 0) return;
+    if (this.state.input[0] === '0' && integer > 0) {
       newInput = [num];
     } else {
       if (operatorCheck(lastItem)) {
@@ -112,7 +111,7 @@ export class App extends Component {
   };
   clear = () => {
     this.setState({
-      input: [0]
+      input: ['0']
     });
   };
   render() {
